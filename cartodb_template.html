@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!-- Based on an example from Chris Whong's class on creating a basic interactive map with JavaScript. See the CartoDB Academy for a step-by-step tutorial: http://docs.cartodb.com/tutorials/create_map_cartodbjs.html -->
+
+<html>
+  <head>
+    <title>Your Title Here</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+
+    <!-- CartoDB CSS stylesheet -->
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
+    <style>
+      /* CSS to style the page*/
+      body {
+        margin:0;
+       }
+      #map {
+        background:gray;
+        position:absolute;
+        height:100%;
+        width:100%;
+       }
+      #info {
+        position: absolute;
+        top: 10px;
+        left: 50px;
+        background: steelblue;
+        border-radius: 10px;
+        display: block;
+        padding: 10px;
+        color: white;
+        font-family:sans-serif;
+       }
+    </style>
+  </head>
+  <body>
+    <!-- div container for the CartoDB map -->
+    <div id='map'>
+    </div>
+
+    <!-- div container for the info box -->
+    <div id='info'>
+      <p class = 'message'>Welcome to My CartoDB Map!</p>
+      <button id = 'reset'>Reset</button>
+    </div>
+
+    <!-- JavaScript for working with CartoDB -->
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+    
+    <!-- The custom JavaScript for the map -->
+    <script>
+      // a JavaScript function that formats the numbers with commas
+      // based on http://cwestblog.com/2011/06/23/javascript-add-commas-to-numbers/
+      function addCommas(intNum) {
+        return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+      }
+      // the center point of the map on load. Change this to adjust the center point of the map.
+      var map_centerpoint = [0,0];
+      // zoom level of the map on load. Higher number zooms the map in closer
+      var zoom_level = 2
+      // your visualization layer from CartoDB
+      var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c4377378-4861-11e5-adbb-0e0c41326911/viz.json';
+      // the name of the CartoDB table you want to query against
+      var table_name = 'world_borders';
+      // create the map object
+      var map = new L.Map('map', {
+          center: map_centerpoint, //center of map
+          zoom: zoom_level //zoom level of map
+        });
+      // initializes the basemap. This uses the basic black background
+      var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        }).addTo(map);
+      // adds the functionality for clicking and filtering by population
+      var myLayer = cartodb.createLayer(map, myVizLayer)
+        .done(function(layer) {
+          var lots = layer.getSubLayer(0);
+          lots.setInteractivity('cartodb_id, name, pop2005');
+          lots.setInteraction(true);
+          lots.on('featureClick', function(e, latlng, pos, data, layer) {
+            console.log("The population of " + data.name + " is " + addCommas(data.pop2005));
+            // function to update the info box
+            $('.message').html('Selected country is ' + data.name + "<br>Showing countries with a population of " + addCommas(data.pop2005) + ' or greater');
+            // SQL query based on population of selected country
+            var newSql = "SELECT * FROM " + table_name + " WHERE pop2005 >=" + data.pop2005;
+            
+            console.log(newSql); // log the SQL query to the console 
+            lots.setSQL(newSql); // submit query to map and filter the countries shown
+          });
+          // function to reset the layer and clear the query
+          $('#reset').click(function() {
+            lots.setSQL("SELECT * FROM " + table_name);
+            $('.message').text('Welcome to my CartoDB map!');
+          });
+        })
+        .addTo(map);
+    </script>
+  </body>
+</html>
