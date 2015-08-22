@@ -56,7 +56,7 @@
       function addCommas(intNum) {
         return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
       }
-      
+     
       ///////// Parameters to change with your own information ////////////
       // the center point of the map on load. Change this to adjust the center point of the map.
       var map_centerpoint = [0,0];
@@ -67,7 +67,6 @@
       // the name of the CartoDB table you want to query against
       var table_name = 'world_borders';
       ////////// End of key parameters ///////////////
-      
       // create the map object
       var map = new L.Map('map', {
           center: map_centerpoint, //center of map
@@ -84,13 +83,18 @@
           lots.setInteractivity('cartodb_id, name, pop2005');
           lots.setInteraction(true);
           lots.on('featureClick', function(e, latlng, pos, data, layer) {
+            //data now has the features we specified with setInteractivity()
+            //we reference them by using the syntax data.<column_name>, where <column_name> is the column listed in setInteractivity()
+            //this prints the name of the country and the population to the console
+            //we use the addCommas() function to put commas in the right place
             console.log("The population of " + data.name + " is " + addCommas(data.pop2005));
-            // function to update the info box
+            //a function to update the info box with country name and population
+            //the <br> tag puts a breaking space between the lines
             $('.message').html('Selected country is ' + data.name + "<br>Showing countries with a population of " + addCommas(data.pop2005) + ' or greater');
-            // SQL query based on population of selected country
+            // SQL query based on population of selected country, which will update the visualization
             var newSql = "SELECT * FROM " + table_name + " WHERE pop2005 >=" + data.pop2005;
             
-            console.log(newSql); // log the SQL query to the console 
+            console.log(newSql); // log the SQL query to the console to make sure it's correct
             lots.setSQL(newSql); // submit query to map and filter the countries shown
           });
           // function to reset the layer and clear the query
