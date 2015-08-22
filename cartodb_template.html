@@ -56,6 +56,8 @@
       function addCommas(intNum) {
         return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
       }
+      
+      ///////// Parameters to change with your own information ////////////
       // the center point of the map on load. Change this to adjust the center point of the map.
       var map_centerpoint = [0,0];
       // zoom level of the map on load. Higher number zooms the map in closer
@@ -64,6 +66,8 @@
       var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c4377378-4861-11e5-adbb-0e0c41326911/viz.json';
       // the name of the CartoDB table you want to query against
       var table_name = 'world_borders';
+      ////////// End of key parameters ///////////////
+      
       // create the map object
       var map = new L.Map('map', {
           center: map_centerpoint, //center of map
