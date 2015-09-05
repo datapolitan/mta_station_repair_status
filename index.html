@@ -3,7 +3,7 @@
 
 <html>
   <head>
-    <title>Your Title Here</title>
+    <title>MTA Subway Station Status</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
@@ -26,12 +26,27 @@
         position: absolute;
         top: 10px;
         left: 50px;
-        background: steelblue;
+        background: #D3D3D3;
         border-radius: 10px;
         display: block;
         padding: 10px;
-        color: white;
+        color: #F8F8FF;
         font-family:sans-serif;
+        text-align:center;
+        width:20em;
+        text-shadow: .25px .25px .25px #000;
+        border:1px solid black;
+       }
+       a {
+        text-decoration: none;
+        color:gray;
+        font-weight:bold;
+        text-shadow:none;
+       }
+       h3 {
+        margin:0.5em;
+        -webkit-margin-before: 0.5em;
+        -webkit-margin-after: 0.5em;
        }
     </style>
   </head>
@@ -42,8 +57,10 @@
 
     <!-- div container for the info box -->
     <div id='info'>
-      <p class = 'message'>Welcome to My CartoDB Map!</p>
-      <button id = 'reset'>Reset</button>
+      <h3 class = 'message'>MTA Subway Station Status</h3>
+      <p>A remix of <a href="http://interactive.cbcny.org/nyct-station-conditions" target="_new">the original</a><br> by the <a href="http://cbcny.org/" target="_new">Citizens Budget Commission</a></p>
+      <p>The status of each subway station is displayed along with the percentage of structural components not in a state of good repair (SGR). </p>
+      <p>A map-hack by <a href="http://www.datapolitan.com" target="_blank">Datapolitan</a></p>
     </div>
 
     <!-- JavaScript for working with CartoDB -->
@@ -59,13 +76,13 @@
      
       ///////// Parameters to change with your own information ////////////
       // the center point of the map on load. Change this to adjust the center point of the map.
-      var map_centerpoint = [0,0];
+      var map_centerpoint = [40.712784, -74.005941];
       // zoom level of the map on load. Higher number zooms the map in closer
-      var zoom_level = 2
+      var zoom_level = 11
       // your visualization layer from CartoDB
-      var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c4377378-4861-11e5-adbb-0e0c41326911/viz.json';
+      var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c35e85b2-5370-11e5-b844-0e9d821ea90d/viz.json';
       // the name of the CartoDB table you want to query against
-      var table_name = 'world_borders';
+      var table_name = 'map_data_sgr';
       ////////// End of key parameters ///////////////
       // create the map object
       var map = new L.Map('map', {
@@ -73,36 +90,12 @@
           zoom: zoom_level //zoom level of map
         });
       // initializes the basemap. This uses the basic black background
-      var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+      var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         }).addTo(map);
       // adds the functionality for clicking and filtering by population
       var myLayer = cartodb.createLayer(map, myVizLayer)
-        .done(function(layer) {
-          var lots = layer.getSubLayer(0);
-          lots.setInteractivity('cartodb_id, name, pop2005');
-          lots.setInteraction(true);
-          lots.on('featureClick', function(e, latlng, pos, data, layer) {
-            //data now has the features we specified with setInteractivity()
-            //we reference them by using the syntax data.<column_name>, where <column_name> is the column listed in setInteractivity()
-            //this prints the name of the country and the population to the console
-            //we use the addCommas() function to put commas in the right place
-            console.log("The population of " + data.name + " is " + addCommas(data.pop2005));
-            //a function to update the info box with country name and population
-            //the <br> tag puts a breaking space between the lines
-            $('.message').html('Selected country is ' + data.name + "<br>Showing countries with a population of " + addCommas(data.pop2005) + ' or greater');
-            // SQL query based on population of selected country, which will update the visualization
-            var newSql = "SELECT * FROM " + table_name + " WHERE pop2005 >=" + data.pop2005;
-            
-            console.log(newSql); // log the SQL query to the console to make sure it's correct
-            lots.setSQL(newSql); // submit query to map and filter the countries shown
-          });
-          // function to reset the layer and clear the query
-          $('#reset').click(function() {
-            lots.setSQL("SELECT * FROM " + table_name);
-            $('.message').text('Welcome to my CartoDB map!');
-          });
-        })
+ 
         .addTo(map);
     </script>
   </body>
