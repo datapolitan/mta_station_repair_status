@@ -33,14 +33,19 @@
         color: #6E6E6E;
         font-family:sans-serif;
         text-align:center;
-        width:20em;
+        width:15em;
         /*text-shadow: .25px .25px .25px #000;*/
         border:1px solid black;
+       }
+       @media(max-width:40em){
+        #info,#route{
+          visibility: hidden;
+        }
        }
        #route{
         position: absolute;
         top: 10px;
-        right: 50px;
+        right: 0;
         background: #D3D3D3;
         border-radius: 10px;
         display: block;
@@ -74,7 +79,7 @@
     <div id='info'>
       <h3 class = 'message'>MTA Subway Station Status</h3>
       <p>A remix of <a href="http://interactive.cbcny.org/nyct-station-conditions" target="_new">the original</a><br> from the <a href="http://cbcny.org/" target="_new">Citizens Budget Commission</a></p>
-      <p>The status of each subway station is displayed along with the percentage of structural components not in a state of good repair (SGR). </p>
+      <p>The status of each subway station is displayed along with the percentage of structural components not in a state of good repair (SGR). Click on the icons on the right to see a particular subway route.</p>
       <p>A map-hack by <a href="http://www.datapolitan.com" target="_blank">Datapolitan</a></p>
     </div>
     <div id='route'>
