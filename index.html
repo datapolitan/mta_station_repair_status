@@ -10,65 +10,8 @@
 
     <!-- CartoDB CSS stylesheet -->
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
-
-    <style>
-      /* CSS to style the page*/
-      body {
-        margin:0;
-       }
-      #map {
-        background:gray;
-        position:absolute;
-        height:100%;
-        width:100%;
-       }
-      #info{
-        position: absolute;
-        top: 10px;
-        left: 50px;
-        background: #D3D3D3;
-        border-radius: 10px;
-        display: block;
-        padding: 10px;
-        color: #6E6E6E;
-        font-family:sans-serif;
-        text-align:center;
-        width:15em;
-        /*text-shadow: .25px .25px .25px #000;*/
-        border:1px solid black;
-       }
-       @media(max-width:40em){
-        #info,#route{
-          visibility: hidden;
-        }
-       }
-       #route{
-        position: absolute;
-        top: 10px;
-        right: 0;
-        background: #D3D3D3;
-        border-radius: 10px;
-        display: block;
-        padding: 10px;
-        color: #6E6E6E;
-        font-family:sans-serif;
-        text-align:center;
-        width:2em;
-        border:1px solid black;
-
-       }
-       a {
-        text-decoration: none;
-        color:#585858;
-        font-weight:bold;
-        text-shadow:none;
-       }
-       h3 {
-        margin:0.5em;
-        -webkit-margin-before: 0.5em;
-        -webkit-margin-after: 0.5em;
-       }
-    </style>
+    <link href="css/c3.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/style.css"/>
   </head>
   <body>
     <!-- div container for the CartoDB map -->
@@ -82,99 +25,58 @@
       <p>The status of each subway station is displayed along with the percentage of structural components not in a state of good repair (SGR). Click on the icons on the right to see a particular subway route.</p>
       <p>A map-hack by <a href="http://www.datapolitan.com" target="_blank">Datapolitan</a></p>
     </div>
+    <div id='mobile-info'>
+      <h3 class = 'message'>MTA Subway Station Status</h3>
+      <p>A remix of <a href="http://interactive.cbcny.org/nyct-station-conditions" target="_new">the original</a><br> from the <a href="http://cbcny.org/" target="_new">Citizens Budget Commission</a> by <a href="http://www.datapolitan.com" target="_blank">Datapolitan</a></p>
+    </div>
     <div id='route'>
-      <img src="images/a.png" class="subway-route" id="a"><br>
-      <img src="images/c.png" class="subway-route" id="c"><br>
-      <img src="images/e.png" class="subway-route" id="e"><br>
-      <img src="images/b.png" class="subway-route" id="b"><br>
-      <img src="images/d.png" class="subway-route" id="d"><br>
-      <img src="images/f.png" class="subway-route" id="f"><br>
-      <img src="images/m.png" class="subway-route" id="m"><br>
-      <img src="images/n.png" class="subway-route" id="n"><br>
-      <img src="images/q.png" class="subway-route" id="q"><br>
-      <img src="images/r.png" class="subway-route" id="r"><br>
-      <img src="images/s.png" class="subway-route" id="s"><br>
-      <img src="images/j.png" class="subway-route" id="j"><br>
-      <img src="images/z.png" class="subway-route" id="z"><br>
-      <img src="images/1.png" class="subway-route" id="1"><br>
-      <img src="images/2.png" class="subway-route" id="2"><br>
-      <img src="images/3.png" class="subway-route" id="3"><br>
-      <img src="images/4.png" class="subway-route" id="4"><br>
-      <img src="images/5.png" class="subway-route" id="5"><br>
-      <img src="images/6.png" class="subway-route" id="6"><br>
-      <img src="images/7.png" class="subway-route" id="7"><br>
+      <div class="header"><strong>Subway<br>Routes</strong></div>
+      <img src="images/a.png" class="subway-route" id="a">&nbsp;<img src="images/1.png" class="subway-route" id="1"><br>
+      <img src="images/c.png" class="subway-route" id="c">&nbsp;<img src="images/2.png" class="subway-route" id="2"><br>
+      <img src="images/e.png" class="subway-route" id="e">&nbsp;<img src="images/3.png" class="subway-route" id="3"><br>
+      <img src="images/b.png" class="subway-route" id="b">&nbsp;<img src="images/4.png" class="subway-route" id="4"><br>
+      <img src="images/d.png" class="subway-route" id="d">&nbsp;<img src="images/5.png" class="subway-route" id="5"><br>
+      <img src="images/f.png" class="subway-route" id="f">&nbsp;<img src="images/6.png" class="subway-route" id="6"><br>
+      <img src="images/m.png" class="subway-route" id="m">&nbsp;<img src="images/7.png" class="subway-route" id="7"><br>
+      <img src="images/n.png" class="subway-route" id="n">&nbsp;<img src="images/s.png" class="subway-route" id="s"><br>
+      <img src="images/q.png" class="subway-route" id="q">&nbsp;<img src="images/j.png" class="subway-route" id="j"><br>
+      <img src="images/r.png" class="subway-route" id="r">&nbsp;<img src="images/z.png" class="subway-route" id="z"><br>
       <img src="images/reset.png" class="subway-route" id="reset">
     </div>
 
+    <div id='legend'> 
+    <div class="header">% Structural Components<br>in State of Good Repair (SGR)</div>
+    <ul>
+      <li>
+        <div class="circle" style="background:#d73027"></div>
+        61-79%
+      </li>
+      <li>
+        <div class="circle" style="background:#FF6600"></div>
+        41-60%
+      </li>
+      <li>
+        <div class="circle" style="background:#ffff00"></div>
+        21-40%
+      </li>
+      <li>
+        <div class="circle" style="background:#1a9850"></div>
+        0-20%
+      </li>
+    </ul>
+    </div>
+    <div id="chart">
+      <div class="header">Percent of Stations in <br>Each Category of SGR</div>
+    </div>
     <!-- JavaScript for working with CartoDB -->
     <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="js/c3.min.js"></script>
+<!--     // <script src="http://code.highcharts.com/highcharts.js"></script> -->
+<!--     // <script src="http://code.highcharts.com/modules/exporting.js"></script> -->
+
     
     <!-- The custom JavaScript for the map -->
-    <script>
-      // a JavaScript function that formats the numbers with commas
-      // based on http://cwestblog.com/2011/06/23/javascript-add-commas-to-numbers/
-      function addCommas(intNum) {
-        return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-      }
-     
-      ///////// Parameters to change with your own information ////////////
-      // the center point of the map on load. Change this to adjust the center point of the map.
-      var map_centerpoint = [40.712784, -74.005941];
-      // zoom level of the map on load. Higher number zooms the map in closer
-      var zoom_level = 11
-      // your visualization layer from CartoDB
-      var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c35e85b2-5370-11e5-b844-0e9d821ea90d/viz.json';
-      // the name of the CartoDB table you want to query against
-      var point_table_name = 'map_data_sgr';
-      var line_table_name = 'nyct_routes_1';
-      var sublayers=[];
-      ////////// End of key parameters ///////////////
-      // create the map object
-      function init(){
-            var map = new L.Map('map', {
-                center: map_centerpoint, //center of map
-                zoom: zoom_level //zoom level of map
-              });
-            // initializes the basemap. This uses the basic positron background
-            var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-              }).addTo(map);
-      
-            var myLayer = cartodb.createLayer(map, myVizLayer) 
-              .addTo(map)
-              .done(function(layer) {
-                 for (var i = 0; i < layer.getSubLayerCount(); i++) {
-                     sublayers[i] = layer.getSubLayer(i);
-                     // alert("Congrats, you added sublayer #" + i + "!");
-                  } 
-                  layer.setInteraction(true);
-                  layer.on('error', function(err) {
-                      console.log('error: ' + err);
-                  });
-            });
-        } //end function init
-        init();
-
-
-// var newSql;
-      $(document).ready(function() {
-          $(".subway-route").click(function(event) {
-              var route = event.target.id;
-              var pt_sql,rt_sql;
-              if (route == 'reset'){
-                pt_sql = "SELECT * FROM " + point_table_name;
-                rt_sql = "SELECT * FROM " + line_table_name;
-              } else {
-                pt_sql = "SELECT * FROM " + point_table_name + " WHERE numbers_letters ILIKE '%" + route + "%'";
-                rt_sql = "SELECT * FROM " + line_table_name + " WHERE route_id ILIKE '%" + route + "%'";
-              };
-              // console.log(pt_sql);
-              sublayers[2].setSQL(pt_sql);
-              // console.log(rt_sql);
-              sublayers[0].setSQL(rt_sql);
-              sublayers[1].setSQL(rt_sql);
-          });
-      });
-    </script>
+    <script src="js/mta_sgr.js"></script>
   </body>
 </html>
