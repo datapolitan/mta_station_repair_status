@@ -17,6 +17,7 @@ var point_table_name = 'map_data_sgr';
 var line_table_name = 'nyct_routes_1';
 var sublayers=[];
 var vals=[];
+var orig_line_css=[];
 ////////// End of key parameters ///////////////
 
 
@@ -43,12 +44,14 @@ function init(){
                 console.log('error: ' + err);
             });
             draw_chart();
+            orig_line_css.push(sublayers[0].getCartoCSS());
+            orig_line_css.push(sublayers[1].getCartoCSS());
       });
 
   } //end function init
   init();
 
-var width = 300,
+var width = 262,
     height = 200,
     radius = Math.min(width, height) / 2;
 
@@ -114,7 +117,8 @@ function update_chart(route){
   draw_chart(url);
 } //end function update_chart
 
-// var newSql;
+var opaqueStyle = $("#opaque").text();
+
 $(document).ready(function() {
     $(".subway-route").click(function(event) {
         var route = event.target.id;
@@ -123,6 +127,8 @@ $(document).ready(function() {
           pt_sql = "SELECT * FROM " + point_table_name;
           rt_sql = "SELECT * FROM " + line_table_name;
           draw_chart();
+          sublayers[0].setCartoCSS(orig_line_css[0]);
+          sublayers[1].setCartoCSS(orig_line_css[1]);
         } else {
           pt_sql = "SELECT * FROM " + point_table_name + " WHERE numbers_letters ILIKE '%" + route + "%'";
           rt_sql = "SELECT * FROM " + line_table_name + " WHERE route_id ILIKE '%" + route + "%'";
@@ -134,4 +140,12 @@ $(document).ready(function() {
         sublayers[1].setSQL(rt_sql);
         update_chart(route);
     });
+    $("li").click(function(event){
+      sublayers[1].setSQL("SELECT * FROM " + line_table_name);
+      var cat = event.target.id;
+      sql = "SELECT * FROM " + point_table_name + " WHERE sgr_perc_cat = " + cat;
+      sublayers[2].setSQL(sql);
+      sublayers[1].setCartoCSS(opaqueStyle);
+      sublayers[0].setCartoCSS(opaqueStyle);
+    })
 });
