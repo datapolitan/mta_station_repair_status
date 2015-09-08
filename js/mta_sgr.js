@@ -4,7 +4,6 @@ function addCommas(intNum) {
   return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
 }
 
-///////// Parameters to change with your own information ////////////
 // the center point of the map on load. Change this to adjust the center point of the map.
 var map_centerpoint = [40.737092, -73.946743];
 // zoom level of the map on load. Higher number zooms the map in closer
@@ -12,45 +11,46 @@ var zoom_level = 11;
 // your visualization layer from CartoDB
 var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c35e85b2-5370-11e5-b844-0e9d821ea90d/viz.json';
 var cartodbSqlBase = 'http://richard-datapolitan.cartodb.com/api/v2/sql';
-// the name of the CartoDB table you want to query against
+
+// the name of the CartoDB table I want to query against
 var point_table_name = 'map_data_sgr';
 var line_table_name = 'nyct_routes_1';
-var sublayers=[];
-var vals=[];
-var orig_line_css=[];
-////////// End of key parameters ///////////////
+
+var sublayers=[]; //access to the sublayer objects in CartoDB API
+var orig_line_css=[]; //array to hold the original CartoCSS for resetting the map
 
 
 // create the map object
 function init(){
-      var map = new L.Map('map', {
-          center: map_centerpoint, //center of map
-          zoom: zoom_level //zoom level of map
+  var map = new L.Map('map', {
+      center: map_centerpoint, //center of map
+      zoom: zoom_level //zoom level of map
+    });
+  // initializes the basemap. This uses the basic positron background
+  var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+
+  var myLayer = cartodb.createLayer(map, myVizLayer) 
+    .addTo(map)
+    .done(function(layer) {
+       for (var i = 0; i < layer.getSubLayerCount(); i++) {
+           sublayers[i] = layer.getSubLayer(i);
+           // alert("Congrats, you added sublayer #" + i + "!");
+        } 
+        layer.setInteraction(true);
+        layer.on('error', function(err) {
+            console.log('error: ' + err);
         });
-      // initializes the basemap. This uses the basic positron background
-      var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-        }).addTo(map);
-
-      var myLayer = cartodb.createLayer(map, myVizLayer) 
-        .addTo(map)
-        .done(function(layer) {
-           for (var i = 0; i < layer.getSubLayerCount(); i++) {
-               sublayers[i] = layer.getSubLayer(i);
-               // alert("Congrats, you added sublayer #" + i + "!");
-            } 
-            layer.setInteraction(true);
-            layer.on('error', function(err) {
-                console.log('error: ' + err);
-            });
-            draw_chart();
-            orig_line_css.push(sublayers[0].getCartoCSS());
-            orig_line_css.push(sublayers[1].getCartoCSS());
-      });
-
+        draw_chart();
+        orig_line_css.push(sublayers[0].getCartoCSS());
+        orig_line_css.push(sublayers[1].getCartoCSS());
+    });
   } //end function init
-  init();
 
+init(); //initialize the map
+
+///////variables for the D3 chart////////////
 var width = 262,
     height = 200,
     radius = Math.min(width, height) / 2;
@@ -72,14 +72,16 @@ var svg = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+//create the d3 chart. Takes a parameter when a route has been selected, otherwise defaults to the entire dataset
 function draw_chart(route_url){
   var url;
   if (route_url){
-    d3.selectAll('.arc').remove();
-    url = route_url;
+    d3.selectAll('.arc').remove(); //clear the existing chart to replace (a complete hack so I don't have to fight with transitions)
+    url = route_url; //replace the url with the route where clause
   } else {
-    url = cartodbSqlBase + '?' + $.param({ q:"SELECT sgr_perc_cat, COUNT(sgr_perc_cat) AS spc FROM map_data_sgr GROUP BY sgr_perc_cat ORDER BY sgr_perc_cat" });
+    url = cartodbSqlBase + '?' + $.param({ q:"SELECT sgr_perc_cat, COUNT(sgr_perc_cat) AS spc FROM map_data_sgr GROUP BY sgr_perc_cat ORDER BY sgr_perc_cat" }); //query for full table
   }
+  //render utilizing the json from CartoDB
   d3.json(url,function (data){
     
     var dataset = [];
