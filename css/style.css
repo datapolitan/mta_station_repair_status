@@ -2,6 +2,7 @@
 body {
   margin:0;
  }
+
 #map {
   background:gray;
   position:absolute;
@@ -23,16 +24,15 @@ body {
   width:15em;
   border:1px solid black;
  }
+ #mobile-info{
+  visibility:hidden;  
+}
 
+/*Some hacky mobile responsiveness*/
 @media(max-width:40em){
   #info, #route, #chart{
     visibility: hidden;
   }
-
-}
-
-#mobile-info{
-  visibility:hidden;  
 }
 
 @media screen and (min-width: 0em) and (max-width: 41em){
@@ -41,22 +41,22 @@ body {
   }
 } 
 
- #route {
-  position: absolute;
-  top: 10px;
-  right: 5px;
-  background: #D3D3D3;
-  border-radius: 10px;
-  display: block;
-  padding: 10px;
-  color: #6E6E6E;
-  font-family:sans-serif;
-  text-align:center;
-  width:4em;
-  border:1px solid black;
- }
+#route {
+position: absolute;
+top: 10px;
+right: 5px;
+background: #D3D3D3;
+border-radius: 10px;
+display: block;
+padding: 10px;
+color: #6E6E6E;
+font-family:sans-serif;
+text-align:center;
+width:4em;
+border:1px solid black;
+}
 
- #legend {
+#legend {
   position:absolute;
   bottom:20px;
   right: 5px;
@@ -69,8 +69,9 @@ body {
   text-align:center;
   width:160px;
   border:1px solid black;
- }
- #chart {
+}
+
+#chart {
   position:absolute;
   bottom:20px;
   left:50px;
@@ -82,33 +83,38 @@ body {
   margin: 0 auto;
   font-family:sans-serif;
   color: #6E6E6E;
- }
- .chart-text {
+}
+.chart-text {
   font-family:sans-serif;
   font-size:0.6em;
   color: #6E6E6E;
- }
- svg {
+}
+
+svg {
   position:absolute;
   bottom:0%;
- }
- a {
+}
+
+a {
   text-decoration: none;
   color:#585858;
   font-weight:bold;
   text-shadow:none;
- }
- h3 {
+}
+
+h3 {
   margin:0.5em;
   -webkit-margin-before: 0.5em;
   -webkit-margin-after: 0.5em;
- }
- ul{
+}
+
+ul {
   padding:0;
   margin-left:10px;
   margin-right:0px;
- }
- li {
+}
+
+li {
   font-family:sans-serif;
   font-size: 0.8em;
   list-style-type: none;
@@ -117,27 +123,18 @@ body {
   vertical-align:middle;
   padding-right:50px;
   padding-left:30px;
- }
- .header {
+}
+
+.header {
   margin: 1px 1px 1px 1px;
   text-align: center;
   font-weight:bold;
- }
- .circle {
-    position:relative;
-    border-radius: 50%;
-    width: 15px;
-    height: 15px; 
-    /*background:red;*/
-    float:left;
-  }
-.caption{
-  font-family:sans-serif;
-  font-size: 0.5em;
+}
+
+.circle {
   position:relative;
-  float:right;
- }
-  .container{
-    margin-top: 5px;
-    margin-bottom:5px;
-  }
+  border-radius: 50%;
+  width: 15px;
+  height: 15px; 
+  float:left;
+}
