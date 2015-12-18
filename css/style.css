@@ -42,18 +42,18 @@ body {
 } 
 
 #route {
-position: absolute;
-top: 10px;
-right: 5px;
-background: #D3D3D3;
-border-radius: 10px;
-display: block;
-padding: 10px;
-color: #6E6E6E;
-font-family:sans-serif;
-text-align:center;
-width:4em;
-border:1px solid black;
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background: #D3D3D3;
+  border-radius: 10px;
+  display: block;
+  padding: 10px;
+  color: #6E6E6E;
+  font-family:sans-serif;
+  text-align:center;
+  width:4em;
+  border:1px solid black;
 }
 
 #legend {
