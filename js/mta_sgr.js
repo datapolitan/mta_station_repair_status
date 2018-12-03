@@ -10,7 +10,7 @@ var map_centerpoint = [40.737092, -73.946743];
 var zoom_level = 11;
 // your visualization layer from CartoDB
 var myVizLayer = 'https://richard-datapolitan.cartodb.com/api/v2/viz/c35e85b2-5370-11e5-b844-0e9d821ea90d/viz.json';
-var cartodbSqlBase = 'http://richard-datapolitan.cartodb.com/api/v2/sql';
+var cartodbSqlBase = 'https://richard-datapolitan.cartodb.com/api/v2/sql';
 
 // the name of the CartoDB table I want to query against
 var point_table_name = 'map_data_sgr';
@@ -27,8 +27,8 @@ function init(){
       zoom: zoom_level //zoom level of map
     });
   // initializes the basemap. This uses the basic positron background
-  var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+  var basemap = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
     }).addTo(map);
 
   var myLayer = cartodb.createLayer(map, myVizLayer) 
